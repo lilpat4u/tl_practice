@@ -1,83 +1,104 @@
-﻿
+﻿using System;
+
 class OrderManager
 {
     static void Main()
     {
-        string name, product, address;
-        int count;
-
-        GetOrderDetails(out name, out product, out count, out address);
+        string name = GetUserName();
+        string product = GetProductName();
+        int count = GetProductQuantity();
+        string address = GetUserAddress();
 
         if (ConfirmOrder(name, product, count, address))
         {
-            PrintSuccessMessage(name, product, count, address);
+            Console.WriteLine($"{name}! Ваш заказ {product} в количестве {count} оформлен! Ожидайте доставку по адресу {address} к {DateTime.Now.AddDays(3):dd.MM.yyyy}.");
         }
         else
         {
-            Console.WriteLine("\nПожалуйста, повторите заказ с правильными данными.");
+            Console.WriteLine("Заказ отменен.");
         }
     }
 
-
-    static void GetOrderDetails(out string name, out string product, out int count, out string address)
+    static string GetUserName()
     {
-        Console.Write("Введите название товара: ");
-        product = Console.ReadLine();
+        string name = null;
+        while (string.IsNullOrWhiteSpace(name))
+        {
+            Console.Write("Введите ваше имя: ");
+            name = Console.ReadLine().Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Имя не может быть пустым. Пожалуйста, введите снова.");
+            }
+        }
+        return name;
+    }
+
+    static string GetProductName()
+    {
+        string product = null;
         while (string.IsNullOrWhiteSpace(product))
         {
-            Console.Write("Название товара не может быть пустым. Пожалуйста, введите снова: ");
-            product = Console.ReadLine();
+            Console.Write("Введите название товара: ");
+            product = Console.ReadLine().Trim();
+            if (string.IsNullOrWhiteSpace(product))
+            {
+                Console.WriteLine("Название товара не может быть пустым. Пожалуйста, введите снова.");
+            }
         }
+        return product;
+    }
 
-        Console.Write("Введите количество товара: ");
+    static int GetProductQuantity()
+    {
+        int count = 0;
+        const int maxCount = 1000; // Максимальное количество товара, которое можно заказать
+
         while (true)
         {
+            Console.Write("Введите количество товара (1 - 1000): ");
+            string input = Console.ReadLine();
             try
             {
-                string input = Console.ReadLine();
                 count = int.Parse(input);
-                if (count <= 0)
+                if (count <= 0 || count > maxCount)
+                {
                     throw new OverflowException();
+                }
                 break;
             }
             catch (FormatException)
             {
-                Console.Write("Некорректное количество. Пожалуйста, введите положительное число: ");
+                Console.WriteLine("Пожалуйста, введите корректное число.");
             }
             catch (OverflowException)
             {
-                Console.Write("Количество должно быть положительным и не слишком большим. Пожалуйста, введите снова: ");
+                Console.WriteLine($"Количество должно быть положительным и не превышать {maxCount}. Пожалуйста, введите снова.");
             }
         }
 
-        Console.Write("Введите ваше имя: ");
-        name = Console.ReadLine();
-        while (string.IsNullOrWhiteSpace(name))
-        {
-            Console.Write("Имя не может быть пустым. Пожалуйста, введите снова: ");
-            name = Console.ReadLine();
-        }
+        return count;
+    }
 
-        Console.Write("Введите адрес доставки: ");
-        address = Console.ReadLine();
+    static string GetUserAddress()
+    {
+        string address = null;
         while (string.IsNullOrWhiteSpace(address))
         {
-            Console.Write("Адрес доставки не может быть пустым. Пожалуйста, введите снова: ");
-            address = Console.ReadLine();
+            Console.Write("Введите адрес доставки: ");
+            address = Console.ReadLine().Trim();
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                Console.WriteLine("Адрес доставки не может быть пустым. Пожалуйста, введите снова.");
+            }
         }
+        return address;
     }
 
     static bool ConfirmOrder(string name, string product, int count, string address)
     {
-        Console.WriteLine($"\nЗдравствуйте, {name}, вы заказали {count} {product} на адрес {address}, все верно? (да/нет)");
-        string confirmation = Console.ReadLine().ToLower();
+        Console.WriteLine($"Здравствуйте, {name}, вы заказали {count} {product} на адрес {address}, все верно? (да/нет)");
+        string confirmation = Console.ReadLine().Trim().ToLower();
         return confirmation == "да";
     }
-
-    static void PrintSuccessMessage(string name, string product, int count, string address)
-    {
-        DateTime deliveryDate = DateTime.Now.AddDays(3);
-        Console.WriteLine($"\n{name}! Ваш заказ {product} в количестве {count} оформлен! Ожидайте доставку по адресу {address} к {deliveryDate.ToShortDateString()}.");
-    }
 }
-
