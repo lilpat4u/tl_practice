@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 class OrderManager
 {
     static void Main()
