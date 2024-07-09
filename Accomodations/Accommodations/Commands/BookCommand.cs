@@ -8,7 +8,7 @@ public class BookCommand : ICommand
     private readonly BookingDto _bookingDto;
     private Booking _executedBookingDto;
 
-    public BookCommand(IBookingService bookingService, BookingDto bookingDto)
+    public BookCommand( IBookingService bookingService, BookingDto bookingDto )
     {
         _bookingService = bookingService;
         _bookingDto = bookingDto;
@@ -16,14 +16,28 @@ public class BookCommand : ICommand
 
     public void Execute()
     {
-        _executedBookingDto = _bookingService.Book(_bookingDto.UserId, _bookingDto.Category, _bookingDto.StartDate, _bookingDto.EndDate, _bookingDto.ApplyDiscount );
-        Console.WriteLine($"Booking successful: ID {_executedBookingDto.Id}");
+        try
+        {
+            _executedBookingDto = _bookingService.Book( _bookingDto.UserId, _bookingDto.Category, _bookingDto.StartDate, _bookingDto.EndDate, _bookingDto.ApplyDiscount );
+            Console.WriteLine( $"Booking successful: ID {_executedBookingDto.Id}" );
+        }
+        catch ( Exception ex )
+        {
+            Console.WriteLine( $"Error during booking: {ex.Message}" );
+        }
     }
 
     public void Undo()
     {
-        _bookingService.CancelBooking(_executedBookingDto.Id);
-        decimal cancellationPenalty = _bookingService.CalculateCancellationPenaltyAmount(_executedBookingDto);
-        Console.WriteLine($"Booking {_executedBookingDto.Id} was canceled. Cancellation penalty: {cancellationPenalty}");
+        try
+        {
+            _bookingService.CancelBooking( _executedBookingDto.Id );
+            decimal cancellationPenalty = _bookingService.CalculateCancellationPenaltyAmount( _executedBookingDto );
+            Console.WriteLine( $"Booking {_executedBookingDto.Id} was canceled. Cancellation penalty: {cancellationPenalty}" );
+        }
+        catch ( Exception ex )
+        {
+            Console.WriteLine( $"Error during cancellation: {ex.Message}" );
+        }
     }
 }

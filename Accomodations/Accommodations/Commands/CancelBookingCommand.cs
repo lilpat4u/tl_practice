@@ -1,6 +1,6 @@
 using Accommodations;
 using Accommodations.Commands;
-using Accomodations;
+using Accomodations; 
 
 public class CancelBookingCommand : ICommand
 {
@@ -8,7 +8,7 @@ public class CancelBookingCommand : ICommand
     private readonly Guid _bookingId;
     private Booking? _canceledBooking;
 
-    public CancelBookingCommand(BookingService bookingService, Guid bookingId)
+    public CancelBookingCommand( BookingService bookingService, Guid bookingId )
     {
         _bookingService = bookingService;
         _bookingId = bookingId;
@@ -16,24 +16,31 @@ public class CancelBookingCommand : ICommand
 
     public void Execute()
     {
-        _canceledBooking = _bookingService.FindBookingById(_bookingId);
-        if (_canceledBooking != null)
+        try
         {
-            _bookingService.CancelBooking(_bookingId);
-            decimal cancellationPenalty = _bookingService.CalculateCancellationPenaltyAmount(_canceledBooking);
-            Console.WriteLine($"Booking {_canceledBooking.Id} was canceled. Cancellation penalty: {cancellationPenalty}");
+            _canceledBooking = _bookingService.FindBookingById( _bookingId );
+            if ( _canceledBooking != null )
+            {
+                _bookingService.CancelBooking( _bookingId );
+                decimal cancellationPenalty = _bookingService.CalculateCancellationPenaltyAmount( _canceledBooking );
+                Console.WriteLine( $"Booking {_canceledBooking.Id} was canceled. Cancellation penalty: {cancellationPenalty}" );
+            }
+            else
+            {
+                Console.WriteLine( $"Booking {_bookingId} not found." );
+            }
         }
-        else
+        catch ( Exception ex )
         {
-            Console.WriteLine($"Booking {_bookingId} not found.");
+            Console.WriteLine( $"Error during cancellation: {ex.Message}" );
         }
     }
 
     public void Undo()
     {
-        if (_canceledBooking != null)
+        if ( _canceledBooking != null )
         {
-            Console.WriteLine("Undo for cancel is not supported");
+            Console.WriteLine( "Undo for cancel is not supported" );
         }
     }
 }

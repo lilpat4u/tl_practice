@@ -21,36 +21,36 @@ public class BookingService : IBookingService
         new User { Id = 5, Name = "Evan Wright", IsEligibleForDiscount = true }
     ];
 
-    public Booking Book(int userId, string category, DateTime startDate, DateTime endDate, bool applyDiscount)
+    public Booking Book( int userId, string category, DateTime startDate, DateTime endDate, bool applyDiscount )
     {
-        if (endDate < startDate)
+        if ( endDate < startDate )
         {
-            throw new ArgumentException("End date cannot be earlier than start date");
+            throw new ArgumentException( "End date cannot be earlier than start date" );
         }
 
-        Category? selectedCategory = _categories.FirstOrDefault(c => c.Name == category);
-        if (selectedCategory == null)
+        Category? selectedCategory = _categories.FirstOrDefault( c => c.Name == category );
+        if ( selectedCategory == null )
         {
-            throw new ArgumentException("Category not found");
+            throw new ArgumentException( "Category not found" );
         }
 
-        if (selectedCategory.AvailableRooms <= 0)
+        if ( selectedCategory.AvailableRooms <= 0 )
         {
-            throw new ArgumentException("No available rooms");
+            throw new ArgumentException( "No available rooms" );
         }
 
-        int days = (endDate - startDate).Days;
+        int days = ( endDate - startDate ).Days;
         decimal cost = selectedCategory.BaseRate * days;
 
-        User? user = _users.FirstOrDefault(u => u.Id == userId);
-        if (user == null)
+        User? user = _users.FirstOrDefault( u => u.Id == userId );
+        if ( user == null )
         {
-            throw new ArgumentException("User not found");
+            throw new ArgumentException( "User not found" );
         }
 
-        if (applyDiscount && user.IsEligibleForDiscount)
+        if ( applyDiscount && user.IsEligibleForDiscount )
         {
-            cost -= cost * CalculateDiscount(userId);
+            cost -= cost * CalculateDiscount( userId );
         }
 
         Booking booking = new()
@@ -63,64 +63,68 @@ public class BookingService : IBookingService
             Cost = cost
         };
 
-        _bookings.Add(booking);
+        _bookings.Add( booking );
         selectedCategory.AvailableRooms--;
 
         return booking;
     }
 
-    public void CancelBooking(Guid bookingId)
+    public void CancelBooking( Guid bookingId )
     {
-        Booking? booking = _bookings.FirstOrDefault(b => b.Id == bookingId);
-        if (booking == null)
+        Booking? booking = _bookings.FirstOrDefault( b => b.Id == bookingId );
+        if ( booking == null )
         {
-            throw new ArgumentException($"Booking with id: '{bookingId}' does not exist");
+            throw new ArgumentException( $"Booking with id: '{bookingId}' does not exist" );
         }
 
-        if (booking.StartDate <= DateTime.Now)
+        if ( booking.StartDate <= DateTime.Now )
         {
-            throw new ArgumentException("Start date cannot be earlier than now date");
+            throw new ArgumentException( "Start date cannot be earlier than now date" );
         }
-        _bookings.Remove(booking);
-        Category? category = _categories.FirstOrDefault(c => c.Name == booking.Category.Name);
-        category.AvailableRooms++;
+        _bookings.Remove( booking );
+        Category? category = _categories.FirstOrDefault( c => c.Name == booking.Category.Name );
+        if ( category != null )
+        {
+            category.AvailableRooms++;
+        }
     }
 
-    private decimal CalculateDiscount(int userId)
+    private decimal CalculateDiscount( int userId )
     {
         return 0.1m;
     }
 
-    public Booking FindBookingById(Guid bookingId)
+    public Booking? FindBookingById( Guid bookingId )
     {
-        return _bookings.FirstOrDefault(b => b.Id == bookingId);
+        return _bookings.FirstOrDefault( b => b.Id == bookingId );
     }
 
-    public IEnumerable<Booking> SearchBookings(DateTime startDate, DateTime endDate, string categoryName)
+    public IEnumerable<Booking> SearchBookings( DateTime startDate, DateTime endDate, string categoryName )
     {
         IQueryable<Booking> query = _bookings.AsQueryable();
 
-        query = query.Where(b => b.StartDate >= startDate);
+        query = query.Where( b => b.StartDate >= startDate );
 
-        query = query.Where(b => b.EndDate <= endDate);
+        query = query.Where( b => b.EndDate <= endDate );
 
-        if (!string.IsNullOrEmpty(categoryName))
+        if ( !string.IsNullOrEmpty( categoryName ) )
         {
-            query = query.Where(b => b.Category.Name == categoryName);
+            query = query.Where( b => b.Category.Name == categoryName );
         }
 
         return query.ToList();
     }
 
-    public decimal CalculateCancellationPenaltyAmount(Booking booking)
+    public decimal CalculateCancellationPenaltyAmount( Booking booking )
     {
-        if (booking.StartDate <= DateTime.Now)
+        if ( booking.StartDate <= DateTime.Now )
         {
-            throw new ArgumentException("Start date cannot be earlier than now date");
+            throw new ArgumentException( "Start date cannot be earlier than now date" );
         }
 
-        int daysBeforeArrival = (DateTime.Now - booking.StartDate).Days;
+        int daysBeforeArrival = ( booking.StartDate - DateTime.Now ).Days;
 
-        return 5000.0m / daysBeforeArrival;
+        return 5000.0m / Math.Max( daysBeforeArrival, 1 ); // Prevent division by zero
     }
+}
 }

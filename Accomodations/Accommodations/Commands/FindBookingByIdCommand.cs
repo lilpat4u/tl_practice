@@ -1,13 +1,13 @@
 using Accommodations;
 using Accommodations.Commands;
-using Accomodations;
+using Accomodations; 
 
 public class FindBookingByIdCommand : ICommand
 {
     private readonly BookingService _bookingService;
     private readonly Guid _bookingId;
 
-    public FindBookingByIdCommand(BookingService bookingService, Guid bookingId)
+    public FindBookingByIdCommand( BookingService bookingService, Guid bookingId )
     {
         _bookingService = bookingService;
         _bookingId = bookingId;
@@ -15,19 +15,26 @@ public class FindBookingByIdCommand : ICommand
 
     public void Execute()
     {
-        Booking? booking = _bookingService.FindBookingById(_bookingId);
-        if (booking != null)
+        try
         {
-            Console.WriteLine($"Booking found: {booking.Category} for User {booking.UserId}");
+            Booking? booking = _bookingService.FindBookingById( _bookingId );
+            if ( booking != null )
+            {
+                Console.WriteLine( $"Booking found: {booking.Category} for User {booking.UserId}" );
+            }
+            else
+            {
+                Console.WriteLine( "Booking not found." );
+            }
         }
-        else
+        catch ( Exception ex )
         {
-            Console.WriteLine("Booking not found.");
+            Console.WriteLine( $"Error during finding booking: {ex.Message}" );
         }
     }
 
     public void Undo()
     {
-        Console.WriteLine($"Undo operation is not supported for {nameof(GetType)}.");
+        Console.WriteLine( $"Undo operation is not supported for {GetType().Name}." );
     }
 }

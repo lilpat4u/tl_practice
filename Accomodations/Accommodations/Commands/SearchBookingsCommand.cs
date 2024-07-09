@@ -8,7 +8,7 @@ public class SearchBookingsCommand : ICommand
     private readonly DateTime _endDate;
     private readonly string _categoryName;
 
-    public SearchBookingsCommand(BookingService bookingService, DateTime startDate, DateTime endDate, string categoryName)
+    public SearchBookingsCommand( BookingService bookingService, DateTime startDate, DateTime endDate, string categoryName )
     {
         _bookingService = bookingService;
         _startDate = startDate;
@@ -18,23 +18,30 @@ public class SearchBookingsCommand : ICommand
 
     public void Execute()
     {
-        var bookings = _bookingService.SearchBookings(_startDate, _endDate, _categoryName);
-        if (bookings.Any())
+        try
         {
-            Console.WriteLine($"Found {bookings.Count()} bookings for category '{_categoryName}' between {_startDate} and {_endDate}:");
-            foreach (var booking in bookings)
+            var bookings = _bookingService.SearchBookings( _startDate, _endDate, _categoryName );
+            if ( bookings.Any() )
             {
-                Console.WriteLine($"- Booking ID: {booking.Id}, User ID: {booking.UserId}");
+                Console.WriteLine( $"Found {bookings.Count()} bookings for category '{_categoryName}' between {_startDate} and {_endDate}:" );
+                foreach ( var booking in bookings )
+                {
+                    Console.WriteLine( $"- Booking ID: {booking.Id}, User ID: {booking.UserId}" );
+                }
+            }
+            else
+            {
+                Console.WriteLine( "No bookings found." );
             }
         }
-        else
+        catch ( Exception ex )
         {
-            Console.WriteLine("No bookings found.");
+            Console.WriteLine( $"Error during search bookings: {ex.Message}" );
         }
     }
 
     public void Undo()
     {
-        Console.WriteLine($"Undo operation is not supported for {nameof(GetType)}.");
+        Console.WriteLine( $"Undo operation is not supported for {GetType().Name}." );
     }
 }
