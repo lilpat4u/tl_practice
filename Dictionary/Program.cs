@@ -1,12 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.IO;
-
-class DictionaryApp
+﻿class DictionaryApp
 {
-    private static string filePath = "C:\\Users\\danil\\source\\repos\\HomeWork_04.07.24\\HomeWork_04.07.24\\dictionary.txt";
-    private static Dictionary<string, string> dictionary = new Dictionary<string, string>();
+    private static string _filePath = "dictionary.txt";
+    private static Dictionary<string, string> _dictionary = new Dictionary<string, string>();
 
     static void Main()
     {
@@ -17,25 +12,31 @@ class DictionaryApp
 
     static void LoadDictionary()
     {
-        if ( File.Exists( filePath ) )
+        if ( !File.Exists( _filePath ) )
         {
-            string[] lines = File.ReadAllLines( filePath );
-            foreach ( string line in lines )
-            {
-                if ( !string.IsNullOrWhiteSpace( line ) )
-                {
-                    string[] parts = line.Split( ':' );
-                    if ( parts.Length == 2 )
-                    {
-                        string key = parts[ 0 ].Trim();
-                        string value = parts[ 1 ].Trim();
+            return;
+        }
 
-                        if ( !dictionary.ContainsKey( key ) )
-                        {
-                            dictionary[ key ] = value;
-                        }
-                    }
-                }
+        string[] lines = File.ReadAllLines( _filePath );
+        foreach ( string line in lines )
+        {
+            if ( string.IsNullOrWhiteSpace( line ) )
+            {
+                continue;
+            }
+
+            string[] parts = line.Split( ':' );
+            if ( parts.Length != 2 )
+            {
+                continue;
+            }
+
+            string key = parts[ 0 ].Trim();
+            string value = parts[ 1 ].Trim();
+            if ( !_dictionary.ContainsKey( key ) && !_dictionary.ContainsKey( value ) )
+            {
+                _dictionary[ key ] = value;
+                _dictionary[ value ] = key;
             }
         }
     }
@@ -43,63 +44,43 @@ class DictionaryApp
     static void SaveDictionary()
     {
         List<string> lines = new List<string>();
-        foreach ( var entry in dictionary )
+        foreach ( KeyValuePair<string, string> entry in _dictionary )
         {
-            lines.Add( $"{entry.Key}:{entry.Value}" );
+            if ( _dictionary[ entry.Value ] == entry.Key ) 
+            {
+                lines.Add( $"{entry.Key}: {entry.Value}" );
+            }
         }
-        File.WriteAllLines( filePath, lines );
+        File.WriteAllLines( _filePath, lines );
     }
 
     static void RunDictionaryApp()
     {
         while ( true )
         {
-            Console.WriteLine( "Выберите действие: " );
-            Console.WriteLine( "1. Перевести слово" );
-            Console.WriteLine( "2. Добавить новое слово" );
-            Console.WriteLine( "3. Выход" );
-            Console.WriteLine( "4. Просмотреть все пары слов" );
-
-            string choice = Console.ReadLine();
+            Console.WriteLine( "1. Добавить новое слово" );
+            Console.WriteLine( "2. Найти перевод слова" );
+            Console.WriteLine( "3. Показать все слова" );
+            Console.WriteLine( "4. Выйти" );
+            Console.Write( "Выберите действие: " );
+            string choice = Console.ReadLine().Trim();
 
             switch ( choice )
             {
                 case "1":
-                    TranslateWord();
-                    break;
-                case "2":
                     AddNewWord();
                     break;
+                case "2":
+                    FindTranslation();
+                    break;
                 case "3":
-                    SaveDictionary();
-                    return;
-                case "4":
                     DisplayAllWords();
                     break;
+                case "4":
+                    return;
                 default:
-                    Console.WriteLine( "Некорректный выбор. Пожалуйста, выберите 1, 2, 3 или 4." );
+                    Console.WriteLine( "Неверный выбор. Пожалуйста, попробуйте снова." );
                     break;
-            }
-        }
-    }
-
-    static void TranslateWord()
-    {
-        Console.Write( "Введите слово для перевода: " );
-        string word = Console.ReadLine().Trim();
-
-        if ( dictionary.ContainsKey( word ) )
-        {
-            Console.WriteLine( $"Перевод: {dictionary[ word ]}" );
-        }
-        else
-        {
-            Console.WriteLine( "Слово отсутствует в словаре." );
-            Console.Write( "Хотите добавить новое слово? (да/нет): " );
-            string response = Console.ReadLine().ToLower();
-            if ( response == "да" )
-            {
-                AddNewWord( word );
             }
         }
     }
@@ -111,41 +92,66 @@ class DictionaryApp
         Console.Write( "Введите перевод на другом языке: " );
         string word2 = Console.ReadLine().Trim();
 
-        if ( !dictionary.ContainsKey( word1 ) && !dictionary.ContainsKey( word2 ) )
+        if ( _dictionary.ContainsKey( word1 ) || _dictionary.ContainsKey( word2 ) )
         {
-            dictionary[ word1 ] = word2;
-            dictionary[ word2 ] = word1;
-            Console.WriteLine( "Слово успешно добавлено в словарь." );
-            SaveDictionary(); // Сохраняем изменения сразу после добавления нового слова
+            Console.WriteLine( "Одно из слов уже существует в словаре." );
         }
         else
         {
-            Console.WriteLine( "Одно из слов уже существует в словаре." );
+            _dictionary[ word1 ] = word2;
+            _dictionary[ word2 ] = word1;
+            Console.WriteLine( "Слово успешно добавлено в словарь." );
+        }
+    }
+
+    static void FindTranslation()
+    {
+        Console.Write( "Введите слово для перевода: " );
+        string word = Console.ReadLine().Trim();
+
+        if ( _dictionary.ContainsKey( word ) )
+        {
+            Console.WriteLine( $"Перевод слова '{word}': {_dictionary[ word ]}" );
+        }
+        else
+        {
+            Console.WriteLine( "Слово не найдено в словаре." );
+            Console.Write( "Хотите добавить его? (да/нет): " );
+            string response = Console.ReadLine().ToLower();
+            if ( response == "да" )
+            {
+                AddNewWord( word );
+            }
         }
     }
 
     static void AddNewWord( string word )
     {
-        Console.Write( $"Введите перевод для слова '{word}': " );
+        Console.Write( "Введите перевод для слова: " );
         string translation = Console.ReadLine().Trim();
 
-        if ( !dictionary.ContainsKey( word ) && !dictionary.ContainsKey( translation ) )
+        if ( _dictionary.ContainsKey( word ) || _dictionary.ContainsKey( translation ) )
         {
-            dictionary[ word ] = translation;
-            dictionary[ translation ] = word;
-            Console.WriteLine( "Слово успешно добавлено в словарь." );
-            SaveDictionary(); // Сохраняем изменения сразу после добавления нового слова
+            Console.WriteLine( "Одно из слов уже существует в словаре." );
         }
         else
         {
-            Console.WriteLine( "Одно из слов уже существует в словаре." );
+            _dictionary[ word ] = translation;
+            _dictionary[ translation ] = word;
+            Console.WriteLine( "Слово успешно добавлено в словарь." );
         }
     }
 
     static void DisplayAllWords()
     {
-        Console.WriteLine( "Существующие пары слов в словаре:" );
-        foreach ( var entry in dictionary )
+        if ( _dictionary.Count == 0 )
+        {
+            Console.WriteLine( "Словарь пуст." );
+            return;
+        }
+
+        Console.WriteLine( "Все слова в словаре:" );
+        foreach ( KeyValuePair<string, string> entry in _dictionary )
         {
             Console.WriteLine( $"{entry.Key} - {entry.Value}" );
         }
