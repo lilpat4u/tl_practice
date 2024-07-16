@@ -127,4 +127,3 @@ public class BookingService : IBookingService
         return 5000.0m / Math.Max( daysBeforeArrival, 1 ); // Prevent division by zero
     }
 }
-}

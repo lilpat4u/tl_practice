@@ -1,8 +1,5 @@
 using Accommodations.Commands;
 
-using System;
-using System.Collections.Generic;
-
 namespace Accommodations
 {
     public class AccommodationsProcessor
