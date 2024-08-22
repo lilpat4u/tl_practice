@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarFactory", "CarFactory\CarFactory.csproj", "{E7472D92-277D-462C-95DE-95A6B548640E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{CD76F815-A97D-4920-81B1-923DA6C90F58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BodyShape", "BodyShape", "{DAD8E946-6332-4807-8F9A-0430D81D221C}"
+	ProjectSection(SolutionItems) = preProject
+		Hatchback.cs = Hatchback.cs
+		IBodyShape.cs = IBodyShape.cs
+		Sedan.cs = Sedan.cs
+		Universal.cs = Universal.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Car", "Car", "{5C76A4F9-CFB0-494A-828A-5FAA13A3F66C}"
+	ProjectSection(SolutionItems) = preProject
+		Car.cs = Car.cs
+		ICar.cs = ICar.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CarColor", "CarColor", "{5F06BCFB-38B6-45A8-A7AF-212E17B6CCCE}"
+	ProjectSection(SolutionItems) = preProject
+		Black.cs = Black.cs
+		ICarColor.cs = ICarColor.cs
+		Silver.cs = Silver.cs
+		White.cs = White.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{C8D8FBD2-D23C-47EC-9E93-C5162AE9CDB9}"
+	ProjectSection(SolutionItems) = preProject
+		EnlineEngine.cs = EnlineEngine.cs
+		IEngine.cs = IEngine.cs
+		RotaryEngine.cs = RotaryEngine.cs
+		VTypeEngine.cs = VTypeEngine.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SteeringPositions", "SteeringPositions", "{FC4BDEFC-7DC7-4C7E-9724-F4A2115CDAC9}"
+	ProjectSection(SolutionItems) = preProject
+		SteeringPosition.cs = SteeringPosition.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Transmission", "Transmission", "{E168C965-D56D-4E3C-9AB1-588E1C6CD67F}"
+	ProjectSection(SolutionItems) = preProject
+		AutomaticlTransmission.cs = AutomaticlTransmission.cs
+		ITransmission.cs = ITransmission.cs
+		ManualTransmission.cs = ManualTransmission.cs
+		PowerfullManualTransmission.cs = PowerfullManualTransmission.cs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E7472D92-277D-462C-95DE-95A6B548640E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7472D92-277D-462C-95DE-95A6B548640E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7472D92-277D-462C-95DE-95A6B548640E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7472D92-277D-462C-95DE-95A6B548640E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DAD8E946-6332-4807-8F9A-0430D81D221C} = {CD76F815-A97D-4920-81B1-923DA6C90F58}
+		{5C76A4F9-CFB0-494A-828A-5FAA13A3F66C} = {CD76F815-A97D-4920-81B1-923DA6C90F58}
+		{5F06BCFB-38B6-45A8-A7AF-212E17B6CCCE} = {CD76F815-A97D-4920-81B1-923DA6C90F58}
+		{C8D8FBD2-D23C-47EC-9E93-C5162AE9CDB9} = {CD76F815-A97D-4920-81B1-923DA6C90F58}
+		{FC4BDEFC-7DC7-4C7E-9724-F4A2115CDAC9} = {CD76F815-A97D-4920-81B1-923DA6C90F58}
+		{E168C965-D56D-4E3C-9AB1-588E1C6CD67F} = {CD76F815-A97D-4920-81B1-923DA6C90F58}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C0CE1F3-8576-4F1A-B1E7-3722BFFAC14E}
+	EndGlobalSection
+EndGlobal
