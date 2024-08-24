@@ -1,8 +1,8 @@
-// src/components/CardSet.tsx
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Application } from '../types/Application';
-import { addNewCardToCardSet, deleteCardFromCardSet, changeCardFrontsideInCardSet, changeCardBacksideInCardSet } from '../types/CardMethods';
+import { Application } from '../../types/Application';
+import { addNewCardToCardSet, deleteCardFromCardSet, changeCardFrontsideInCardSet, changeCardBacksideInCardSet } from '../../types/CardMethods';
+import './CardSet.css';
 
 interface CardSetProps {
   app: Application;
@@ -48,40 +48,42 @@ const CardSet: React.FC<CardSetProps> = ({ app, setApp }) => {
   };
 
   return (
-    <div>
-      <h2>{cardSet.name}</h2>
+    <div className="cardset-container">
+      <h2 className='cardset-header'>{cardSet.name}</h2>
 
-      <ul>
+      <ul className="card-list">
         {cardSet.cards.map(card => (
-          <li key={card.id}>
-            <div>
+          <li key={card.id} className="card-item">
+            <div className="card-content">
               <p>Front: {card.frontside}</p>
               <p>Back: {card.backside}</p>
-              <button onClick={() => startEditing(card.id, card.frontside, card.backside)}>Edit</button>
-              <button onClick={() => handleDeleteCard(card.id)}>Delete</button>
+              <button onClick={() => startEditing(card.id, card.frontside, card.backside)} className="button">Edit</button>
+              <button onClick={() => handleDeleteCard(card.id)} className="button button-danger">Delete</button>
             </div>
           </li>
         ))}
       </ul>
 
-      <div>
+      <div className="add-card">
         <input
           type="text"
           placeholder="Frontside"
           value={frontside}
           onChange={(e) => setFrontside(e.target.value)}
+          className="input"
         />
         <input
           type="text"
           placeholder="Backside"
           value={backside}
           onChange={(e) => setBackside(e.target.value)}
+          className="input"
         />
 
         {editingCardId ? (
-          <button onClick={() => handleEditCard(editingCardId)}>Update Card</button>
+          <button onClick={() => handleEditCard(editingCardId)} className="button button-primary">Update Card</button>
         ) : (
-          <button onClick={handleAddCard}>Add New Card</button>
+          <button onClick={handleAddCard} className="button button-primary">Add New Card</button>
         )}
       </div>
     </div>
