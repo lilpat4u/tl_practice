@@ -1,6 +1,8 @@
-import { createCardSet, updateNameCardSet, deleteCardSet, addCardToCardSet, CardSet } from '../CardSet';
-import { Card } from '../Card';
+import { createCardSet, updateNameCardSet, deleteCardSet, addCardToCardSet, CardSet } from '../../../Typescript_task/types/CardSet';
+import { Card } from '../../../Typescript_task/types/Card';
 import { v4 as uuidv4 } from "uuid";
+
+
 
 describe('CardSet functions', () => {
 
