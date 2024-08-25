@@ -22,11 +22,11 @@
     margin-bottom: 1rem;
     background-color: #f9f9f9;
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: transform 0.6s ease;
   }
   
   .card.flipped {
-    transform: rotateY(180deg);
+    transform: rotateY(360deg);
   }
 
   .learning-table {

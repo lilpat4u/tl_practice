@@ -69,6 +69,7 @@ const App: React.FC = () => {
                 handleDeleteCardSet={handleDeleteCardSet}
                 startEditingCardSetName={startEditingCardSetName}
                 newCardSetName={newCardSetName}
+                setEditingCardSetName={setEditingCardSetName}
                 setNewCardSetName={setNewCardSetName}
                 handleAddCardSet={handleAddCardSet}
                 editingCardSetId={editingCardSetId}
@@ -93,6 +94,7 @@ const CardSetList: React.FC<{
   newCardSetName: string;
   setNewCardSetName: React.Dispatch<React.SetStateAction<string>>;
   handleAddCardSet: () => void;
+  setEditingCardSetName: React.Dispatch<React.SetStateAction<string>>;
   editingCardSetId: string | null;
   editingCardSetName: string;
   handleChangeCardSetName: () => void;
@@ -104,6 +106,7 @@ const CardSetList: React.FC<{
   setNewCardSetName,
   handleAddCardSet,
   editingCardSetId,
+  setEditingCardSetName,
   editingCardSetName,
   handleChangeCardSetName,
 }) => (
@@ -136,7 +139,7 @@ const CardSetList: React.FC<{
           type="text"
           placeholder="Edit Card Set Name"
           value={editingCardSetName}
-          onChange={(e) => setNewCardSetName(e.target.value)}
+          onChange={(e) => setEditingCardSetName(e.target.value)}
           className="input"
         />
         <button onClick={handleChangeCardSetName} className="button button-primary">Save Name</button>

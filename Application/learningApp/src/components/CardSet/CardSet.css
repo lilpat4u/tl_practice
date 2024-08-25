@@ -4,7 +4,21 @@
     padding: 1rem;
     text-align: left;
   }
+  .back-button {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #1a1a1a;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1rem;
+  }
   
+  .back-button:hover {
+    background-color: #333;
+  }
   .card-list {
     list-style: none;
     padding: 0;

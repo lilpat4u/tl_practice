@@ -18,18 +18,15 @@ export function removeCurrentCard(set: CardSet): CardSet {
 }
 
 export function moveCurrentCardToEnd(set: CardSet): CardSet {
-    const canChange = set.cards.length >= 2;
-
-    if (!canChange) {
-        return set;
+    const canMove = set.cards.length > 1;
+  
+    if (!canMove) {
+      return set;
     }
-
-    const currentCard = set.cards[0];
-    const otherCards = set.cards.slice(1);
-    const updatedCards = [ ...otherCards, currentCard ];
-
+  
+    const [firstCard, ...remainingCards] = set.cards;
     return {
-        ...set,
-        cards: updatedCards
+      ...set,
+      cards: [...remainingCards, firstCard],
     };
-}
+  }

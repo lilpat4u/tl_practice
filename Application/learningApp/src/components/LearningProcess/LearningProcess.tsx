@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Application } from '../../types/Application';
-import { moveCurrentCardToEnd } from '../../types/LearningProcess';
 import { markCardAsLearned } from '../../types/Card';
 import "./LearningProcess.css"
 
@@ -78,12 +77,22 @@ const LearningProcess: React.FC<LearningProcessProps> = ({ app, setApp }) => {
 
   const handleMoveToEnd = () => {
     setApp(prevApp => {
-      const updatedCardSets = prevApp.cardSets.map(set =>
-        set.id === id ? moveCurrentCardToEnd(set) : set
-      );
+      const updatedCardSets = prevApp.cardSets.map(set => {
+        if (set.id === id) {
+          // Перемещаем первую карточку в конец колоды
+          const [firstCard, ...remainingCards] = set.cards;
+          return {
+            ...set,
+            cards: [...remainingCards, firstCard],
+          };
+        }
+        return set;
+      });
+  
       return { ...prevApp, cardSets: updatedCardSets };
     });
-    setIsFlipped(false);
+  
+    setIsFlipped(false);  // Возвращаем карточку в состояние лицевой стороны
   };
 
   const handleFlipCard = () => {
@@ -92,16 +101,17 @@ const LearningProcess: React.FC<LearningProcessProps> = ({ app, setApp }) => {
 
   return (
     <div className='learning-border'>
-      <h2>Learning: {cardSet.name}</h2>
-      <div onClick={handleFlipCard} style={{ cursor: 'pointer' }}>
+    <Link to="/main" className="back-button">{"<"} Back</Link>
+    <h2>Learning: {cardSet.name}</h2>
+      <div onClick={handleFlipCard} className={`card ${isFlipped ? 'flipped' : ''}`}>
         {isFlipped ? (
-          <div className='learning-table'>
-            <span>{currentCard.backside}</span>
-            <button onClick={handleMarkAsLearned}>Mark as Learned</button>
-            <button onClick={handleMoveToEnd}>Move to End</button>
+          <div>
+            <p>{currentCard.backside}</p>
+            <button onClick={handleMarkAsLearned} className="button button-primary">Mark as Learned</button>
+            <button onClick={handleMoveToEnd} className="button">Move to End</button>
           </div>
         ) : (
-          <span>{currentCard.frontside}</span>
+          <p>{currentCard.frontside}</p>
         )}
       </div>
     </div>
