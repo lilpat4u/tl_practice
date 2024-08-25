@@ -1,6 +1,5 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import CardSetList from './CardSet';
+import CardSetList from '../CardSetList/CardSetList';
 import { Application } from '../../types/Application';
 
 const mockApp: Application = {

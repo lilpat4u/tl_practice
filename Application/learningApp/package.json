@@ -24,6 +24,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.4",
+    "@babel/preset-react": "^7.24.7",
     "@eslint/js": "^9.9.0",
     "@jest/globals": "^27.5.1",
     "@testing-library/jest-dom": "^6.5.0",
@@ -34,7 +35,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^29.7.0",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
