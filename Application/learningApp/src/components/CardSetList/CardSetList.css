@@ -1,0 +1,29 @@
+.add-cardset,
+.edit-cardset {
+  margin-top: 2rem;
+}
+
+.cardset-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .cardset-item {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .cardset-link {
+    flex-grow: 1;
+    text-align: left;
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+  }
