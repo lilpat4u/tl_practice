@@ -20,6 +20,19 @@ const LearningProcess: React.FC<LearningProcessProps> = ({ app, setApp }) => {
 
   if (!cardSet) return <div>Card Set not found</div>;
 
+  // Проверка, если CardSet пуст
+  if (cardSet.cards.length === 0) {
+    return (
+      <div className="learning-container">
+        <h2>Card Set "{cardSet.name}" is empty!</h2>
+        <p>Please add some cards to start learning.</p>
+        <button onClick={() => navigate(`/cardset/${cardSet.id}`)} className="button button-primary">
+          Go to {cardSet.name}
+        </button>
+      </div>
+    );
+  }
+
   // Фильтруем карточки, чтобы исключить выученные
   const unlearnedCards = cardSet.cards.filter(card => !card.isLearned);
 
