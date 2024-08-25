@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export type Card = {
   id: string;
@@ -32,5 +32,5 @@ export function markCardAsLearned(card: Card): Card {
 }
 
 export function deleteCard(cards: Card[], cardId: string): Card[] {
-  return cards.filter(card => card.id !== cardId);
+  return cards.filter((card) => card.id !== cardId);
 }

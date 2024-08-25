@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Application } from '../../types/Application';
-import { addNewCardToCardSet, deleteCardFromCardSet } from '../../types/CardMethods';
-import './CardSet.css';
+import React, { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { Application } from "../../types/Application";
+import { addNewCardToCardSet, deleteCardFromCardSet } from "../../types/CardMethods";
+import "./CardSet.css";
 
 interface CardSetProps {
   app: Application;
@@ -11,10 +11,10 @@ interface CardSetProps {
 
 const CardSet: React.FC<CardSetProps> = ({ app, setApp }) => {
   const { id } = useParams<{ id: string }>();
-  const cardSet = app.cardSets.find(set => set.id === id);
+  const cardSet = app.cardSets.find((set) => set.id === id);
 
-  const [frontside, setFrontside] = useState('');
-  const [backside, setBackside] = useState('');
+  const [frontside, setFrontside] = useState("");
+  const [backside, setBackside] = useState("");
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
 
   if (!cardSet) return <div>Card Set not found</div>;
@@ -22,23 +22,21 @@ const CardSet: React.FC<CardSetProps> = ({ app, setApp }) => {
   const handleAddCard = () => {
     if (frontside && backside) {
       setApp(addNewCardToCardSet(app, id!, frontside, backside));
-      setFrontside('');
-      setBackside('');
+      setFrontside("");
+      setBackside("");
     }
   };
 
   const handleEditCard = () => {
     if (editingCardId && frontside && backside) {
-      setApp(prevApp => {
-        const updatedCardSets = prevApp.cardSets.map(set => {
+      setApp((prevApp) => {
+        const updatedCardSets = prevApp.cardSets.map((set) => {
           if (set.id === id) {
             return {
               ...set,
-              cards: set.cards.map(card => 
-                card.id === editingCardId 
-                  ? { ...card, frontside: frontside, backside: backside } 
-                  : card
-              )
+              cards: set.cards.map((card) =>
+                card.id === editingCardId ? { ...card, frontside: frontside, backside: backside } : card,
+              ),
             };
           }
           return set;
@@ -46,8 +44,8 @@ const CardSet: React.FC<CardSetProps> = ({ app, setApp }) => {
         return { ...prevApp, cardSets: updatedCardSets };
       });
       setEditingCardId(null);
-      setFrontside('');
-      setBackside('');
+      setFrontside("");
+      setBackside("");
     }
   };
 
@@ -63,17 +61,23 @@ const CardSet: React.FC<CardSetProps> = ({ app, setApp }) => {
 
   return (
     <div className="cardset-container">
-            <Link to="/main" className="back-button">{"<"} Back</Link>
-      <h2 className='cardset-header'>{cardSet.name}</h2>
+      <Link to="/main" className="back-button">
+        {"<"} Back
+      </Link>
+      <h2 className="cardset-header">{cardSet.name}</h2>
 
       <ul className="card-list">
-        {cardSet.cards.map(card => (
+        {cardSet.cards.map((card) => (
           <li key={card.id} className="card-item">
             <div className="card-content">
               <p>Front: {card.frontside}</p>
               <p>Back: {card.backside}</p>
-              <button onClick={() => startEditing(card.id, card.frontside, card.backside)} className="button">Edit</button>
-              <button onClick={() => handleDeleteCard(card.id)} className="button button-danger">Delete</button>
+              <button onClick={() => startEditing(card.id, card.frontside, card.backside)} className="button">
+                Edit
+              </button>
+              <button onClick={() => handleDeleteCard(card.id)} className="button button-danger">
+                Delete
+              </button>
             </div>
           </li>
         ))}
@@ -96,9 +100,13 @@ const CardSet: React.FC<CardSetProps> = ({ app, setApp }) => {
         />
 
         {editingCardId ? (
-          <button onClick={handleEditCard} className="button button-primary">Update Card</button>
+          <button onClick={handleEditCard} className="button button-primary">
+            Update Card
+          </button>
         ) : (
-          <button onClick={handleAddCard} className="button button-primary">Add New Card</button>
+          <button onClick={handleAddCard} className="button button-primary">
+            Add New Card
+          </button>
         )}
       </div>
     </div>

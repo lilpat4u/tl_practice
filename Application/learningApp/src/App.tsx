@@ -1,49 +1,37 @@
 import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Link,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
 import CardSet from "./components/CardSet/CardSet";
 import LearningProcess from "../src/components/LearningProcess/LearningProcess";
 import { Application } from "../src/types/Application";
-import {
-  addNewCardSet,
-  deleteCardSetFromApp,
-  changeCardSetName,
-} from "../src/types/CardSetMethods";
+import { addNewCardSet, deleteCardSetFromApp, changeCardSetName } from "../src/types/CardSetMethods";
 
-import './App.css';
+import "./App.css";
 
 const App: React.FC = () => {
   const [app, setApp] = useState<Application>(() => {
-    const savedData = localStorage.getItem('cardAppData');
+    const savedData = localStorage.getItem("cardAppData");
     return savedData ? JSON.parse(savedData) : { cardSets: [] };
   });
-  const [newCardSetName, setNewCardSetName] = useState('');
+  const [newCardSetName, setNewCardSetName] = useState("");
   const [editingCardSetId, setEditingCardSetId] = useState<string | null>(null);
-  const [editingCardSetName, setEditingCardSetName] = useState('');
+  const [editingCardSetName, setEditingCardSetName] = useState("");
 
   const handleAddCardSet = () => {
     if (newCardSetName.trim()) {
       setApp(addNewCardSet(app, newCardSetName.trim()));
-      setNewCardSetName('');
+      setNewCardSetName("");
     }
   };
 
   const handleDeleteCardSet = (cardSetId: string) => {
     setApp(deleteCardSetFromApp(app, cardSetId));
   };
-  
-  
 
   const handleChangeCardSetName = () => {
     if (editingCardSetId && editingCardSetName.trim()) {
       setApp(changeCardSetName(app, editingCardSetId, editingCardSetName.trim()));
       setEditingCardSetId(null);
-      setEditingCardSetName('');
+      setEditingCardSetName("");
     }
   };
 
@@ -112,12 +100,20 @@ const CardSetList: React.FC<{
 }) => (
   <div>
     <ul className="cardset-list">
-      {app.cardSets.map(cardSet => (
+      {app.cardSets.map((cardSet) => (
         <li key={cardSet.id} className="cardset-item">
-          <Link to={`/cardset/${cardSet.id}`} className="cardset-link">{cardSet.name}</Link>
-          <Link to={`/learn/${cardSet.id}`} className="button button-primary">Start Learning</Link>
-          <button onClick={() => handleDeleteCardSet(cardSet.id)} className="button button-danger">Delete</button>
-          <button onClick={() => startEditingCardSetName(cardSet.id, cardSet.name)} className="button">Edit Name</button>
+          <Link to={`/cardset/${cardSet.id}`} className="cardset-link">
+            {cardSet.name}
+          </Link>
+          <Link to={`/learn/${cardSet.id}`} className="button button-primary">
+            Start Learning
+          </Link>
+          <button onClick={() => handleDeleteCardSet(cardSet.id)} className="button button-danger">
+            Delete
+          </button>
+          <button onClick={() => startEditingCardSetName(cardSet.id, cardSet.name)} className="button">
+            Edit Name
+          </button>
         </li>
       ))}
     </ul>
@@ -131,7 +127,9 @@ const CardSetList: React.FC<{
           onChange={(e) => setNewCardSetName(e.target.value)}
           className="input"
         />
-        <button onClick={handleAddCardSet} className="button button-primary">Add New Card Set</button>
+        <button onClick={handleAddCardSet} className="button button-primary">
+          Add New Card Set
+        </button>
       </div>
     ) : (
       <div className="edit-cardset">
@@ -142,7 +140,9 @@ const CardSetList: React.FC<{
           onChange={(e) => setEditingCardSetName(e.target.value)}
           className="input"
         />
-        <button onClick={handleChangeCardSetName} className="button button-primary">Save Name</button>
+        <button onClick={handleChangeCardSetName} className="button button-primary">
+          Save Name
+        </button>
       </div>
     )}
   </div>
