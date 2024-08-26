@@ -31,7 +31,7 @@ const LearningProcess: React.FC = () => {
 
   if (!currentCard) {
     return (
-      <div>
+      <div className='restart-learning'>
         <h2>All cards in "{cardSet.name}" are learned!</h2>
         <button onClick={() => {
           const updatedCardSet = {
