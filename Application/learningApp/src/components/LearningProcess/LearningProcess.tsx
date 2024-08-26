@@ -1,122 +1,86 @@
-import React, { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { Application } from "../../types/Application";
-import { markCardAsLearned } from "../../types/Card";
-import "./LearningProcess.scss";
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useCardSetsStore } from '../../store/useCardSetsStore';
+import './LearningProcess.scss';
 
-interface LearningProcessProps {
-  app: Application;
-  setApp: React.Dispatch<React.SetStateAction<Application>>;
-}
-
-const LearningProcess: React.FC<LearningProcessProps> = ({ app, setApp }) => {
+const LearningProcess: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const { app, updateCardSet } = useCardSetsStore();
+  
   const cardSet = app.cardSets.find((set) => set.id === id);
+  
   const [isFlipped, setIsFlipped] = useState(false);
-  const [allLearned, setAllLearned] = useState(false);
 
-  if (!cardSet) return <div>Card Set not found</div>;
+  if (!cardSet) {
+    return <div>Card Set not found</div>;
+  }
 
-  // Проверка, если CardSet пуст
   if (cardSet.cards.length === 0) {
     return (
-      <div className="learning-container">
-        <h2>Card Set "{cardSet.name}" is empty!</h2>
-        <p>Please add some cards to start learning.</p>
-        <button onClick={() => navigate(`/cardset/${cardSet.id}`)} className="button button-primary">
-          Go to {cardSet.name}
-        </button>
+      <div className="empty-cardset-container">
+        <h2>The "{cardSet.name}" Card Set is empty!</h2>
+        <p className='empty-cardset-p'>Please add some cards to start learning.</p>
+        <Link to={`/cardset/${cardSet.id}`} className="button button-primary">
+          Add Cards
+        </Link>
       </div>
     );
   }
 
-  // Фильтруем карточки, чтобы исключить выученные
-  const unlearnedCards = cardSet.cards.filter((card) => !card.isLearned);
+  const currentCard = cardSet.cards.find((card) => !card.isLearned);
 
-  // Если все карточки выучены, показываем соответствующее сообщение и предоставляем выбор действий
-  if (unlearnedCards.length === 0 && !allLearned) {
-    setAllLearned(true);
-    return null; // Ожидаем, чтобы избежать повторного рендеринга
-  }
-
-  if (allLearned) {
+  if (!currentCard) {
     return (
       <div>
-        <h2 className="wrong-title">All cards are learned in "{cardSet.name}"!</h2>
-        <button
-          onClick={() => {
-            setApp((prevApp) => ({
-              ...prevApp,
-              cardSets: prevApp.cardSets.map((set) =>
-                set.id === id
-                  ? {
-                      ...set,
-                      cards: set.cards.map((card) => ({ ...card, isLearned: false })),
-                    }
-                  : set,
-              ),
-            }));
-            setAllLearned(false);
-          }}
-        >
+        <h2>All cards in "{cardSet.name}" are learned!</h2>
+        <button onClick={() => {
+          const updatedCardSet = {
+            ...cardSet,
+            cards: cardSet.cards.map((card) => ({ ...card, isLearned: false })),
+          };
+          updateCardSet(updatedCardSet);
+        }}>
           Restart Learning
         </button>
-        <button onClick={() => navigate("/")}>Back to Home</button>
+        <Link to="/">Back to Home</Link>
       </div>
     );
   }
-
-  const currentCard = unlearnedCards[0];
-
-  const handleMarkAsLearned = () => {
-    setApp((prevApp) => {
-      const updatedCardSets = prevApp.cardSets.map((set) =>
-        set.id === id
-          ? {
-              ...set,
-              cards: set.cards.map((card) => (card.id === currentCard.id ? markCardAsLearned(card) : card)),
-            }
-          : set,
-      );
-      return { ...prevApp, cardSets: updatedCardSets };
-    });
-    setIsFlipped(false);
-  };
-
-  const handleMoveToEnd = () => {
-    setApp((prevApp) => {
-      const updatedCardSets = prevApp.cardSets.map((set) => {
-        if (set.id === id) {
-          // Перемещаем первую карточку в конец колоды
-          const [firstCard, ...remainingCards] = set.cards;
-          return {
-            ...set,
-            cards: [...remainingCards, firstCard],
-          };
-        }
-        return set;
-      });
-
-      return { ...prevApp, cardSets: updatedCardSets };
-    });
-
-    setIsFlipped(false); // Возвращаем карточку в состояние лицевой стороны
-  };
 
   const handleFlipCard = () => {
     setIsFlipped(!isFlipped);
   };
 
+  const handleMarkAsLearned = () => {
+    const updatedCardSet = {
+      ...cardSet,
+      cards: cardSet.cards.map((card) =>
+        card.id === currentCard.id ? { ...card, isLearned: true } : card
+      ),
+    };
+    updateCardSet(updatedCardSet);
+    setIsFlipped(false); // Возвращаем карточку в исходное состояние
+  };
+
+  const handleMoveToEnd = () => {
+    const remainingCards = cardSet.cards.filter((card) => card.id !== currentCard.id);
+    const updatedCardSet = {
+      ...cardSet,
+      cards: [...remainingCards, { ...currentCard, isLearned: false }],
+    };
+    updateCardSet(updatedCardSet);
+    setIsFlipped(false); // Возвращаем карточку в исходное состояние
+  };
+
   return (
-    <div className="learning-border">
-      <Link to="/main" className="back-button">
-        {"<"} Back
+    <div className="learning-container">
+      <Link to="/" className="back-button">
+        {'<'} Back
       </Link>
       <h2>Learning: {cardSet.name}</h2>
-      <div onClick={handleFlipCard} className={`card ${isFlipped ? "flipped" : ""}`}>
+      <div onClick={handleFlipCard} className={`card ${isFlipped ? 'flipped' : ''}`}>
         {isFlipped ? (
-          <div>
+          <div className="card-back">
             <p>{currentCard.backside}</p>
             <button onClick={handleMarkAsLearned} className="button button-primary">
               Mark as Learned
@@ -126,7 +90,9 @@ const LearningProcess: React.FC<LearningProcessProps> = ({ app, setApp }) => {
             </button>
           </div>
         ) : (
-          <p>{currentCard.frontside}</p>
+          <div className="card-front">
+            <p>{currentCard.frontside}</p>
+          </div>
         )}
       </div>
     </div>

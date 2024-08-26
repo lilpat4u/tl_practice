@@ -1,5 +1,5 @@
-import { CardSet } from "./CardSet";
+import { CardSet } from "./CardSet"; // Убедитесь, что это правильный путь
 
-export type Application = {
+export interface Application {
   cardSets: CardSet[];
-};
+}

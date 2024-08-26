@@ -1,9 +1,11 @@
 .learning-container {
-    max-width: 600px;
+    max-width: 1200px;
     background-color: #ccc;
     margin: 0 auto;
     padding: 1rem;
     text-align: center;
+    margin-top: 200px;
+    border-radius: 10px;
   }
   
   .learning-border{
@@ -32,4 +34,18 @@
   .learning-table {
     display: grid;
     row-gap: 10px;
+  }
+
+  .empty-cardset-container {
+    display: flex;
+    width: 25%;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+  }
+
+  .empty-cardset-p {
+    color:#ccc;
   }

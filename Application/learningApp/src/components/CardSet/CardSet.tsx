@@ -1,56 +1,63 @@
-import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Application } from "../../types/Application";
-import { addNewCardToCardSet, deleteCardFromCardSet } from "../../types/CardMethods";
-import "./CardSet.scss";
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useCardSetsStore } from '../../store/useCardSetsStore';
+import './CardSet.scss';
 
-interface CardSetProps {
-  app: Application;
-  setApp: React.Dispatch<React.SetStateAction<Application>>;
-}
-
-const CardSet: React.FC<CardSetProps> = ({ app, setApp }) => {
+const CardSet: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { app, updateCardSet } = useCardSetsStore();
+  
   const cardSet = app.cardSets.find((set) => set.id === id);
 
-  const [frontside, setFrontside] = useState("");
-  const [backside, setBackside] = useState("");
+  const [frontside, setFrontside] = useState('');
+  const [backside, setBackside] = useState('');
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
 
   if (!cardSet) return <div>Card Set not found</div>;
 
   const handleAddCard = () => {
     if (frontside && backside) {
-      setApp(addNewCardToCardSet(app, id!, frontside, backside));
-      setFrontside("");
-      setBackside("");
+      const newCard = {
+        id: `${Date.now()}`, // Генерация уникального ID
+        frontside,
+        backside,
+        isLearned: false, // Добавляем свойство isLearned
+      };
+
+      const updatedCardSet = {
+        ...cardSet,
+        cards: [...cardSet.cards, newCard],
+      };
+
+      updateCardSet(updatedCardSet);
+      setFrontside('');
+      setBackside('');
     }
   };
 
   const handleEditCard = () => {
     if (editingCardId && frontside && backside) {
-      setApp((prevApp) => {
-        const updatedCardSets = prevApp.cardSets.map((set) => {
-          if (set.id === id) {
-            return {
-              ...set,
-              cards: set.cards.map((card) =>
-                card.id === editingCardId ? { ...card, frontside: frontside, backside: backside } : card,
-              ),
-            };
-          }
-          return set;
-        });
-        return { ...prevApp, cardSets: updatedCardSets };
-      });
+      const updatedCardSet = {
+        ...cardSet,
+        cards: cardSet.cards.map((card) =>
+          card.id === editingCardId ? { ...card, frontside, backside } : card
+        ),
+      };
+
+      updateCardSet(updatedCardSet);
       setEditingCardId(null);
-      setFrontside("");
-      setBackside("");
+      setFrontside('');
+      setBackside('');
     }
   };
 
   const handleDeleteCard = (cardId: string) => {
-    setApp(deleteCardFromCardSet(app, id!, cardId));
+    const updatedCardSet = {
+      ...cardSet,
+      cards: cardSet.cards.filter((card) => card.id !== cardId),
+    };
+
+    updateCardSet(updatedCardSet);
   };
 
   const startEditing = (cardId: string, currentFrontside: string, currentBackside: string) => {
@@ -61,8 +68,8 @@ const CardSet: React.FC<CardSetProps> = ({ app, setApp }) => {
 
   return (
     <div className="cardset-container">
-      <Link to="/main" className="back-button">
-        {"<"} Back
+      <Link to="/" className="back-button">
+        {'<'} Back
       </Link>
       <h2 className="cardset-header">{cardSet.name}</h2>
 

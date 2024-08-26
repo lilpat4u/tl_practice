@@ -15,9 +15,9 @@ export function createCardSet(name: string): CardSet {
   };
 }
 
-export function updateNameCardSet(CardSet: CardSet, name: string): CardSet {
+export function updateNameCardSet(cardSet: CardSet, name: string): CardSet {
   return {
-    ...CardSet,
+    ...cardSet,
     name,
   };
 }

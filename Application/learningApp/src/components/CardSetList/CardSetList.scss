@@ -2,10 +2,22 @@
 .edit-cardset {
   margin-top: 2rem;
 }
+.cardsetlist-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
 .cardset-list {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
   }
   
   .cardset-item {
@@ -26,4 +38,9 @@
     text-decoration: none;
     color: #333;
     font-size: 1.2rem;
+  }
+  .add-card {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
   }

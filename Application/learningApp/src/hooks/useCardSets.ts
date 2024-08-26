@@ -1,20 +1,24 @@
-import { useState } from 'react';
-import { Application } from '../types/Application';
-import { addNewCardSet, deleteCardSetFromApp, changeCardSetName } from '../types/CardSetMethods';
+import { useState, useEffect } from "react";
+import { Application } from "../types/Application";
+import { addNewCardSet, deleteCardSetFromApp, changeCardSetName } from "../types/CardSetMethods";
 
-export const useCardSets = () => {
+export function useCardSets() {
   const [app, setApp] = useState<Application>(() => {
-    const savedData = localStorage.getItem('cardAppData');
+    const savedData = localStorage.getItem("cardAppData");
     return savedData ? JSON.parse(savedData) : { cardSets: [] };
   });
-  const [newCardSetName, setNewCardSetName] = useState('');
+  const [newCardSetName, setNewCardSetName] = useState("");
   const [editingCardSetId, setEditingCardSetId] = useState<string | null>(null);
-  const [editingCardSetName, setEditingCardSetName] = useState('');
+  const [editingCardSetName, setEditingCardSetName] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("cardAppData", JSON.stringify(app));
+  }, [app]);
 
   const handleAddCardSet = () => {
     if (newCardSetName.trim()) {
       setApp(addNewCardSet(app, newCardSetName.trim()));
-      setNewCardSetName('');
+      setNewCardSetName("");
     }
   };
 
@@ -26,7 +30,7 @@ export const useCardSets = () => {
     if (editingCardSetId && editingCardSetName.trim()) {
       setApp(changeCardSetName(app, editingCardSetId, editingCardSetName.trim()));
       setEditingCardSetId(null);
-      setEditingCardSetName('');
+      setEditingCardSetName("");
     }
   };
 
@@ -39,13 +43,14 @@ export const useCardSets = () => {
     app,
     setApp,
     newCardSetName,
-    editingCardSetId,
-    editingCardSetName,
     setNewCardSetName,
+    editingCardSetId,
+    setEditingCardSetId,
+    editingCardSetName,
     setEditingCardSetName,
     handleAddCardSet,
     handleDeleteCardSet,
     handleChangeCardSetName,
     startEditingCardSetName,
   };
-};
+}
