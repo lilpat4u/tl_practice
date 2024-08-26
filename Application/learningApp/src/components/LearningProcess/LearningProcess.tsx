@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Application } from "../../types/Application";
 import { markCardAsLearned } from "../../types/Card";
-import "./LearningProcess.css";
+import "./LearningProcess.scss";
 
 interface LearningProcessProps {
   app: Application;

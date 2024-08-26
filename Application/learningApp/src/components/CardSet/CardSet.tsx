@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Application } from "../../types/Application";
 import { addNewCardToCardSet, deleteCardFromCardSet } from "../../types/CardMethods";
-import "./CardSet.css";
+import "./CardSet.scss";
 
 interface CardSetProps {
   app: Application;

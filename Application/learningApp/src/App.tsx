@@ -4,7 +4,7 @@ import CardSet from './components/CardSet/CardSet';
 import LearningProcess from './components/LearningProcess/LearningProcess';
 import CardSetList from './components/CardSetList/CardSetList';
 import { useCardSets } from './hooks/useCardSets';
-import './App.css';
+import './App.scss';
 
 const App: React.FC = () => {
   const {

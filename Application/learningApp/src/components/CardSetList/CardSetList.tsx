@@ -1,7 +1,7 @@
 import React from 'react';
 import { Application } from '../../types/Application';
 import { Link } from 'react-router-dom';
-import "./CardSetList.css"
+import "./CardSetList.scss"
 interface CardSetListProps {
   app: Application;
   handleDeleteCardSet: (cardSetId: string) => void;
